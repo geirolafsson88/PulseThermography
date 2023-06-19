@@ -31,4 +31,10 @@ processingSequence = {'estimateflashframe','subtractreferenceframe','performTSR'
 % Perform the analysis pipeline with the specified sequence
 analysis.performAnalysis(processingSequence);
 
+%% Visualise the data 
+analysis.imshow(analysis.data(:,:,analysis.flashframe))
+
+
+
+
 
