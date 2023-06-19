@@ -3,11 +3,11 @@ Author: Geir Olafsson
 Affiliation: University of Bristol 
 
 
-##Platform: 
+## Platform: 
 The code is written for Matlab, using version 2023a, other versions should work but functions in Matlab can and do change over time so universal compatibility cannot be guaranteed. 
 
 
-##Description: 
+## Description: 
 The class is used to process and visualise pulse thermography inpsection data. The code is designed to run several processing functions in sequence, layering processing on top of previous processing. 
 
 Usage: 
@@ -18,7 +18,7 @@ analysis = PulseThermography(thermal_data,383);
 This will inialise the class with all required settings you need to run an analysis. 
 
 
-#Functions
+# Functions
 ##estimateflashframe()
 This function assumes you acquired some images before applying the pulse heating. It will search for the frame with the highest peak temperatures, and assumes this is the moment at which the flash was activated. 
 
@@ -31,7 +31,7 @@ The flash frame is stored in the class instance, you can access it using:
 analysis.flashframe 
 
 
-##subtractreferenceframe()
+## subtractreferenceframe()
 This function also assumes you acquired some images before applying the pulse heating. It will take several images from the start of your data, average them to get one 'low noise' reference frame. This is then subtracted from the whole dataset, and the mean of the reference image is added to restore real temperature values. This is a useful function if you have environmental artifacts in your data, e.g. narcasistic effects from cooled photon detector. 
 
 Usage:
@@ -44,7 +44,7 @@ analysis.subtractreferenceframe(); % can be run on its own, 5 frames from start 
 where frames is how many frames you want to average. You do not have to call the setBackground, if you do not, the default of 5 frames will be used 
 
  
-##performPCT()
+## performPCT()
 This function implements Principal Component Thermography, a method developed by Nik Rajic. It looks for statistical variations in the data using principal component analysis. The processing is applied to the raw data by default, but you can specify that the TSR data is used instead by setting
 `pctIn = 'tsr'`
 
@@ -55,7 +55,7 @@ analysis.performPCT();
 
 The output data is stored in `analysis.pctOutput` as a 3D array, you will normally be interested in frames 2-8 or so, beyond that is normally noise.
 
-##performTSR()
+## performTSR()
 This function performs thermal signal reconstruction developed by Stepehen Sheppard. This method exploits the fact that thermal decay after pulse heating should be exponential in theory. Therefore, the temperature measured by each pixel is moved to logarithmic domain, and a low order polynomial fit is made to the data, and then the signal is moved back to linear scale by taking exponential of the fit. This processing is effective at minimising noise in the data while retaining information that relates to damage/defects. It is important to pick a low order for the polynomial fit, however its often necessary to alter the order for a specific test. This is achieved either using: 
 ```matlab
 analysis.setTSR(order)
@@ -69,7 +69,7 @@ Several outputs are generated, `analysis.tsrTemperature` is the reconstructed te
 differentiated signals, this is possible because the data is so smooth after TSR. Diff2 is second derivative. These are nice as they often increase contrast 
 making defects clearer. 
 
-##performPPT()
+## performPPT()
 This function performs Pulse Phase Thermogrpahy as developed by Maldague and Marinetti. This function uses a Fast Fourier Transform (FFT) to move the  temporal thermal data to the frequency domain. The FFT will decompose the temporal signal into the constituent frequency components, returning the magnitude and phase of the response at each frequency. Normally the phase is most interesting as it is less affected by heating non-uniformity and environmental effects. There are several optional settings that can improve the results (see G. Ólafsson, R. C. Tighe, and J. M. Dulieu-Barton, “Improving the probing depth of thermographic inspections of polymer composite materials,” Meas. Sci. Technol., vol. 30, no. 2, p. 025601, Feb. 2019, doi: 10.1088/1361-6501/aaed15.)
 
 The simplest usage of this function is simply: 
@@ -94,7 +94,7 @@ analysis.performPPT();
 The data is stored in analysis.pptPhase as 3D array, where third dimension is frequency, and the first two dimensions are phase images. You can see what frequencies corrospond to what frames by looking at the analysis.pptFrequencies variable. 
 
 
-##performAnalysis()
+## performAnalysis()
 This function allows you set the analysis sequence as a processing pipeline all in one line, instead of as shown in the previous examples. This is really nice for running a quick analysis. The input argument is simply a cell array of the processing functions you want to run. You can setup any specific parameters, e.g. TSR order or input variables to various functions before you call this function, and then: 
 ```matlab
 analysis.performAnalysis({'estimateflashframe','removeBackground','performTSR','performPPT','performPCT'});
@@ -105,7 +105,7 @@ analysis = PulseThermography(data,framerate);
 analysis.performAnalysis({'estimateflashframe','removeBackground','performTSR','performPPT','performPCT'});
 ```
 
-##imshow()
+## imshow()
 This function plots data as an image, this uses the built in function imagesc, the only real difference is a few of the visualisation settings are pre-defined to make plotting a bit more efficient. You can still use all the normal matlab calls to modify this figure. This function can be used with any of the data outputs from above, TSR, PCT and PPT as well as the raw thermal data. 
 
 e.g. to look at the third frequency bin 
