@@ -122,4 +122,24 @@ You could add a title with the frequency of this bin if you wanted using
 title(['Frequency = ',num2str(analysis.pptFrequencies(3))])
 ```
 
+# Class Properties
+
+Class Properties
+
+The ThermalAnalysis class has some properties that store important information about your thermal data and the analysis settings. Here's what each property means:
+
+    data: This is where you store your thermal data, which should be a three-dimensional array.
+    frameRate: This property holds the frame rate at which the thermal data was captured.
+    flashframe: It represents the frame number where the flash occurred.
+    famestoaverage: You can set the number of frames to be used for reference frame subtraction.
+    tsrOrder: This property defines the order of the polynomial used for Temperature Signal Reconstruction (TSR).
+    tsrTemperature: After performing TSR processing, this property holds the resulting temperature data.
+    tsrDiff and tsrDiff2: These properties store the first and second derivatives of the TSR temperature data, respectively.
+    pptWindowType: Represents the type of window used for Pulse Phase Thermography (PPT) processing.
+    pptN: This property defines the number of points used for padding during PPT processing.
+    pptIn: You can set the input data used for PCT or Phase-based Pulse Thermography (PPT) processing.
+    pptTruncation: It determines the number of frames to truncate during PPT processing.
+    pptPhase: After performing PPT processing, this property stores the phase data.
+    pctIn and pctOutput: These properties are used for Principal Component Thermography (PCT) processing.
+    usercolormap: You can specify the colormap used for data visualization.
 
