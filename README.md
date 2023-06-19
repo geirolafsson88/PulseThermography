@@ -3,11 +3,11 @@ Author: Geir Olafsson
 Affiliation: University of Bristol 
 
 
-## Platform: 
+Platform: 
 The code is written for Matlab, using version 2023a, other versions should work but functions in Matlab can and do change over time so universal compatibility cannot be guaranteed. 
 
 
-## Description: 
+Description: 
 The class is used to process and visualise pulse thermography inpsection data. The code is designed to run several processing functions in sequence, layering processing on top of previous processing. 
 
 Usage: 
