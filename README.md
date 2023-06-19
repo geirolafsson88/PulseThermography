@@ -1,13 +1,14 @@
 # PulseThermography
-Author: Geir Olafsson 
-Affiliation: University of Bristol 
+
+**Author:** Geir Olafsson 
+**Affiliation:** University of Bristol 
 
 
-Platform: 
+**Platform:** 
 The code is written for Matlab, using version 2023a, other versions should work but functions in Matlab can and do change over time so universal compatibility cannot be guaranteed. 
 
 
-Description: 
+**Description:**
 The class is used to process and visualise pulse thermography inpsection data. The code is designed to run several processing functions in sequence, layering processing on top of previous processing. 
 
 Usage: 
@@ -15,11 +16,12 @@ The first step is to inialise the class, it needs 2 variables to do this, the th
 ```matlab
 analysis = PulseThermography(thermal_data,383);
 ```
-This will inialise the class with all required settings you need to run an analysis. 
+This will inialise the class with all required settings you need to run an analysis. Note you do not have to name your class intance analysis, it can be whatever you want, but make sure you use whatever name you choose in place of `analysis` in the below examples. 
 
 
 # Functions
-##estimateflashframe()
+
+## estimateflashframe()
 This function assumes you acquired some images before applying the pulse heating. It will search for the frame with the highest peak temperatures, and assumes this is the moment at which the flash was activated. 
 
 Usage:
@@ -55,6 +57,7 @@ analysis.performPCT();
 
 The output data is stored in `analysis.pctOutput` as a 3D array, you will normally be interested in frames 2-8 or so, beyond that is normally noise.
 
+
 ## performTSR()
 This function performs thermal signal reconstruction developed by Stepehen Sheppard. This method exploits the fact that thermal decay after pulse heating should be exponential in theory. Therefore, the temperature measured by each pixel is moved to logarithmic domain, and a low order polynomial fit is made to the data, and then the signal is moved back to linear scale by taking exponential of the fit. This processing is effective at minimising noise in the data while retaining information that relates to damage/defects. It is important to pick a low order for the polynomial fit, however its often necessary to alter the order for a specific test. This is achieved either using: 
 ```matlab
@@ -78,20 +81,22 @@ The simplest usage of this function is simply:
 analysis.performPPT();
 ```
 
-This will use the raw thermal data as the input to PPT, unless TSR has already been performed, in which case TSR smoothed thermal data will be used. If you want to specify the data input use `analysis.pptIn = 'tsr'`, or `'raw'`. The other settings you can set is you can window the data before processing. This helps to reduce what is known as spectral leakage which is a limitation of FFT processing. Windows reduce spectral leakage, but at the cost of smearing the data a bit in the frequency domain. The code supports all matlab built in windowing functions, they are specified using the matlab syntax, e.g. a rectangular window is called using 'rectwin'. A rectangular window is equivilant to no window, and therefore has the highest leakage, and the highest frequency resolution. A flattop window almost elminates spectral leakage, but results in the lowest frequency resolution. Hamming funciton is a nice middle ground and is therefore the default. 
+This will use the raw thermal data as the input to PPT, unless TSR has already been performed, in which case TSR smoothed thermal data will be used. If you want to specify the data input use `analysis.pptIn = 'tsr'`, or `'raw'`. The other settings you can set is you can window the data before processing. This helps to reduce what is known as spectral leakage which is a limitation of FFT processing. Windows reduce spectral leakage, but at the cost of smearing the data a bit in the frequency domain. The code supports all matlab built in windowing functions, they are specified using the matlab syntax, e.g. a rectangular window is called using `'rectwin'`. A rectangular window is equivilant to no window, and therefore has the highest leakage, and the highest frequency resolution. A flattop window almost elminates spectral leakage, but results in the lowest frequency resolution. Hamming funciton is a nice middle ground and is therefore the default. 
 
-Other options, the number of samples in the input data determine how many frequencies the FFT will seperate out, known as frequency bins. The more frequency bins, the closer the spacing between bins. One way of cheating here is to add zeros to the end of your input signal. This is similar to interpolation, as the zeros do not actually have any information which contributes to the analysis. This process is called zero padding and you can set the size of the signal you want using analysis.pptN = 3000; The syntax is the number you specify will be the final length of each signal, i.e. your signal plus concantenated with the zeros will end up being 3000 samples long in this example. 
+Other options, the number of samples in the input data determine how many frequencies the FFT will seperate out, known as frequency bins. The more frequency bins, the closer the spacing between bins. One way of cheating here is to add zeros to the end of your input signal. This is similar to interpolation, as the zeros do not actually have any information which contributes to the analysis. This process is called zero padding and you can set the size of the signal you want using `analysis.pptN = 3000;` The syntax is the number you specify will be the final length of each signal, i.e. your signal plus concantenated with the zeros will end up being 3000 samples long in this example. 
 
-In PPT it can also be problematic that the respsonse just at the flash can cause effects that make FFT less effective. Namely, FFT does not work well with transient signals, by chopping some of the start of the signal off before running the FFT, we can often make the signal less transient and easier to process. This is known as truncation, and can be set using e.g. analysis.pptTruncation = 30; which would trim 30 frames from the start of the signal. 
+In PPT it can also be problematic that the respsonse just at the flash can cause effects that make FFT less effective. Namely, FFT does not work well with transient signals, by chopping some of the start of the signal off before running the FFT, we can often make the signal less transient and easier to process. This is known as truncation, and can be set using e.g. `analysis.pptTruncation = 30;` which would trim 30 frames from the start of the signal. 
 
 All these settings can be set in one go if you prefer using: 
+```matlab
 analysis.setPPT(window,N,truncation)
+```
 
 Then use:
 ```matlab
 analysis.performPPT();
 ```
-The data is stored in analysis.pptPhase as 3D array, where third dimension is frequency, and the first two dimensions are phase images. You can see what frequencies corrospond to what frames by looking at the analysis.pptFrequencies variable. 
+The data is stored in `analysis.pptPhase` as 3D array, where third dimension is frequency, and the first two dimensions are phase images. You can see what frequencies corrospond to what frames by looking at the `analysis.pptFrequencies` variable. 
 
 
 ## performAnalysis()
